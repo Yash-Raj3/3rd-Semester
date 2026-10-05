@@ -1,0 +1,42 @@
+include irvine32.inc
+
+.data
+original byte "ASSEMBLY",0
+reversed byte lengthof original dup(0)
+msg byte "Original: ",0
+msg2 byte "Reversed: ",0
+
+.code 
+main proc
+mov edx,offset msg
+call writestring 
+mov edx,offset original
+call writestring 
+call crlf
+mov ecx,lengthof original-1
+mov esi,lengthof original-2
+mov edi,0
+l1:
+mov al,original[esi *type original]
+mov reversed[edi*type reversed],al
+dec esi
+inc edi
+loop l1
+
+mov edx,offset msg2
+call writestring
+mov edx,offset reversed
+call writestring
+
+exit
+main endp
+end main
+
+
+
+
+
+
+
+
+

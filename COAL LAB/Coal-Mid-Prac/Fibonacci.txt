@@ -1,0 +1,39 @@
+INCLUDE Irvine32.inc
+
+.data
+
+fb dword 12 dup(?)
+msg byte "Fibonacci Series: ",0
+
+.code 
+main proc
+mov ecx, 10
+mov eax,1
+mov ebx,1
+mov esi,2
+mov fb[0],eax
+mov fb[4],ebx
+l1:
+add eax,ebx 
+xchg eax,ebx 
+mov fb[esi*type fb],ebx
+inc esi
+loop l1
+
+mov edx,offset msg
+call writestring 
+
+mov esi,0
+mov ecx, lengthof fb
+display:
+mov eax,fb[esi *type fb]
+call writedec
+mov al,' '
+call writechar
+inc esi
+loop display
+
+
+    exit
+main ENDP
+END main

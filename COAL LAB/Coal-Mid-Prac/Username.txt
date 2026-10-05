@@ -1,0 +1,74 @@
+INCLUDE Irvine32.inc
+
+.data
+username byte 31 dup(0)
+vals Sdword 5 dup(?)
+sum Sdword ?
+ms byte "Enter Value: ",0
+msg byte "Name: ",0
+msg2 byte "Values: ",0
+msg3 byte "Sum: ",0
+
+.code 
+main proc
+mov edx,offset msg
+call writestring
+mov edx, OFFSET username
+mov ecx, LENGTHOF username - 1
+call ReadString
+
+mov ecx,lengthof vals
+mov esi,0
+l1:
+mov edx,offset ms
+call writestring
+call readint
+mov vals[esi*type vals],eax
+inc esi
+loop l1
+
+mov eax,0
+mov esi,0
+mov ecx,lengthof vals
+l2:
+add eax, vals[esi*type vals]
+inc esi
+loop l2
+
+mov sum,eax
+mov edx,offset msg
+call writestring
+mov edx,offset username
+call writestring 
+call crlf
+
+mov edx,offset msg2
+call writestring
+
+mov esi,0
+mov ecx,lengthof vals
+l3:
+mov eax,vals[esi*type vals]
+call writeint
+mov al,' '
+call writechar
+inc esi
+loop l3
+
+call crlf
+mov edx, offset msg3
+call writestring
+mov eax,sum
+call writeint
+
+
+
+
+
+
+
+
+
+    exit
+main ENDP
+END main

@@ -1,0 +1,39 @@
+INCLUDE Irvine32.inc
+
+.data
+rows Dword 5
+cols Dword 1
+gap byte ' ',0 
+.code
+main PROC
+
+mov ecx, rows
+mov edx,offset gap
+outer:
+mov rows ,ecx
+mov ecx,cols
+mov eax,1
+inner:
+call writedec
+call writestring
+inc eax
+
+loop inner
+inc cols
+mov ecx,rows
+call crlf
+loop outer
+
+
+
+
+
+
+
+
+  
+  
+
+    exit
+main ENDP
+END main

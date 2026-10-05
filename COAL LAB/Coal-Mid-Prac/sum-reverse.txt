@@ -1,0 +1,42 @@
+include irvine32.inc
+
+.data
+val Dword 1,2,3,4,5
+
+
+
+.code 
+main proc
+mov ecx,lengthof val
+mov esi,lengthof val-1
+l1:
+mov eax,val[esi*type val]
+call writedec
+mov al,' '
+call writechar
+dec esi
+loop l1
+
+call crlf
+
+mov ecx,lengthof val
+mov esi,0
+mov eax,0
+l2:
+add eax,val[esi*type val]
+inc esi
+loop l2
+
+call writedec
+exit
+main endp
+end main
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+INCLUDE Irvine32.inc
+
+.data
+rows Dword 5
+cols Dword 1
+.code
+main PROC
+
+mov ecx, rows
+
+outer:
+mov rows ,ecx
+mov ecx,cols
+inner:
+mov al,'*'
+call WriteChar
+mov al,' '
+call WriteChar
+loop inner
+inc cols
+mov ecx,rows
+call crlf
+loop outer
+
+
+
+
+
+
+
+
+  
+  
+
+    exit
+main ENDP
+END main
