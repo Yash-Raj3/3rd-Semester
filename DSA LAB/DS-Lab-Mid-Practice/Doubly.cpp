@@ -5,9 +5,10 @@ class Node
 public:
     int val;
     Node *next;
+    Node *prev;
     Node(int val)
     {
-        next = NULL;
+        prev = next = NULL;
         this->val = val;
     }
 };
@@ -32,6 +33,7 @@ public:
         else
         {
             newNode->next = head;
+            head->prev = newNode;
             head = newNode;
         }
     }
@@ -45,6 +47,7 @@ public:
         else
         {
             tail->next = newNode;
+            newNode->prev = tail;
             tail = newNode;
         }
     }
@@ -84,6 +87,11 @@ public:
         }
 
         newNode->next = temp->next;
+        newNode->prev = temp;
+        if (temp->next != NULL)
+        {
+            temp->next->prev = newNode;
+        }
         if (temp == tail)
         {
             tail = newNode;
@@ -97,6 +105,11 @@ public:
         {
             head = tail = newNode;
         }
+        if (val <= head->val)
+        {
+            insertAthead(val);
+            return;
+        }
         else
         {
             Node *temp = head;
@@ -105,6 +118,11 @@ public:
                 temp = temp->next;
             }
             newNode->next = temp->next;
+            newNode->prev = temp;
+            if (temp->next != NULL)
+            {
+                temp->next->prev = newNode;
+            }
             if (temp == tail)
             {
                 tail = newNode;
@@ -133,19 +151,19 @@ public:
     }
     void reverse()
     {
-        Node *prev = NULL;
+        Node *temp;
         Node *curr = head;
-        Node *next = NULL;
-        tail = head;
 
         while (curr != NULL)
         {
-            next = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = next;
+            temp = curr->prev;
+            curr->prev = curr->next;
+            curr->next = temp;
+            curr = curr->prev;
         }
-        head = prev;
+        temp = head;
+        head = tail;
+        tail = temp;
     }
     void deleteAtfront()
     {
@@ -153,9 +171,15 @@ public:
         {
             return;
         }
-
+        if (head == tail)
+        {
+            delete head;
+            head = tail = NULL;
+            return;
+        }
         Node *del = head;
         head = head->next;
+        head->prev = NULL;
         delete del;
     }
     void deleteATend()
@@ -170,15 +194,10 @@ public:
             head = tail = NULL;
             return;
         }
-        Node *temp = head;
-        while (temp->next != tail)
-        {
-            temp = temp->next;
-        }
-        delete tail;
-
-        tail = temp;
+        Node *del = tail;
+        tail = tail->prev;
         tail->next = NULL;
+        delete del;
     }
     void deleteAtpos(int pos)
     {
@@ -198,7 +217,7 @@ public:
         }
 
         Node *temp = head;
-        for (int i = 0; i < pos - 1; i++)
+        for (int i = 0; i < pos; i++)
         {
             if (temp->next == NULL)
             {
@@ -207,18 +226,20 @@ public:
             }
             temp = temp->next;
         }
-        if (temp->next == NULL)
+        if (temp == NULL)
         {
             cout << "Invalid Position!" << endl;
             return;
         }
-        Node *del = temp->next;
-        temp->next = del->next;
-        if (del == tail)
+        if (temp == tail)
         {
-            tail = temp;
+            deleteATend();
+            return;
         }
-        delete del;
+
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+        delete temp;
     }
     void remove_Dups_from_Sorted()
     {
@@ -233,6 +254,10 @@ public:
             {
                 Node *del = temp->next;
                 temp->next = del->next;
+                if (del->next != NULL)
+                {
+                    del->next->prev = temp;
+                }
                 if (del == tail)
                 {
                     tail = temp;
@@ -256,6 +281,10 @@ public:
             if (sorted == NULL || curr->val < sorted->val)
             {
                 curr->next = sorted;
+                if (sorted != NULL)
+                {
+                    sorted->prev = curr;
+                }
                 sorted = curr;
             }
             else
@@ -266,6 +295,11 @@ public:
                     temp = temp->next;
                 }
                 curr->next = temp->next;
+                curr->prev = temp;
+                if (temp->next != NULL)
+                {
+                    temp->next->prev = curr;
+                }
                 temp->next = curr;
             }
             curr = next;
@@ -361,24 +395,33 @@ public:
         Node *i = head;
         while (i != NULL)
         {
-            Node *prev = i;
+
             Node *j = i->next;
             while (j != NULL)
             {
                 if (i->val == j->val)
                 {
                     Node *del = j;
-                    prev->next = del->next;
+                    j = j->next;
+
+                    if (del->prev != NULL)
+                    {
+                        j->prev->next = del->next;
+                    }
+                    if (del->next != NULL)
+                    {
+                        del->next->prev = del->prev;
+                    }
                     if (del == tail)
                     {
-                        tail = prev;
+                        tail = del->prev;
                     }
-                    j = j->next;
+
                     delete del;
                 }
                 else
                 {
-                    prev = j;
+
                     j = j->next;
                 }
             }
@@ -445,50 +488,4 @@ public:
 };
 int main()
 {
-    Singly sl;
-    // sl.insertAthead(10);
-    // sl.insertAthead(20);
-    // sl.insertAtEnd(30);
-    // sl.insertAtEnd(40);
-    // sl.insertAtpos(50, 4);
-    // sl.insertAtpos(60, 5);
-    // sl.insertAtEnd(70);
-
-    // sl.print();
-    // sl.reverse();
-    // sl.print();
-    // sl.insertAtEnd(40);
-    // sl.insertAtEnd(40);
-    // sl.insertAtEnd(40);
-    // sl.insertAtEnd(40);
-    // sl.print();
-    // sl.remove_dups_from_unsorted();
-    // sl.print();
-    // sl.selection_sort();
-    // sl.print();
-    // cout << "Middle: " << sl.middle() << endl;
-    // sl.insertSorted(45);
-    // sl.print();
-    // sl.deleteAtpos(5);
-    // sl.print();
-    // sl.insertSorted(40);
-    // sl.insertSorted(40);
-    // sl.insertSorted(40);
-    // sl.print();
-    // sl.remove_Dups_from_Sorted();
-    // sl.print();
-    sl.insertAtEnd(1);
-    sl.insertAtEnd(2);
-    sl.insertAtEnd(3);
-    sl.insertAtEnd(2);
-    sl.insertAtEnd(1);
-    sl.print();
-    if (sl.isPalindrome())
-    {
-        cout << "It is Palindrome!" << endl;
-    }
-    else
-    {
-        cout << "Not Palindrome!" << endl;
-    }
 }

@@ -148,18 +148,46 @@ public:
         }
         return result;
     }
+    bool isPalindrome()
+    {
+        stack temp, copy;
+        while (!isEmpty())
+        {
+            int x = pop();
+            temp.push(x);
+            copy.push(x);
+        }
+        while (!temp.isEmpty())
+        {
+            push(temp.pop());
+        }
+        while (!isEmpty())
+        {
+            if (pop() != copy.pop())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 int main()
 {
+
     stack s1;
-    s1.push(10);
-    s1.push(20);
-    s1.push(30);
-    s1.push(30);
-    s1.push(50);
-    s1.push(30);
+    s1.push(1);
+    s1.push(2);
+    s1.push(3);
+    s1.push(2);
+    s1.push(1);
     s1.display();
-    cout << "------------------\n";
-    s1.selection_sort();
-    s1.display();
+
+    if (s1.isPalindrome())
+    {
+        cout << "Palindrome!" << endl;
+    }
+    else
+    {
+        cout << "Not Palindrome!" << endl;
+    }
 }
