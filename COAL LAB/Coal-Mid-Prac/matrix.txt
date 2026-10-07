@@ -29,7 +29,7 @@ pop ecx
 loop outer
 
 call crlf
-mov edi,0
+
 mov edi,0
 mov ecx, cols
 

@@ -1,0 +1,108 @@
+include irvine32.inc
+
+.data
+store Dword ?
+wordstr byte "ASSEMBLY",0
+arrayCodes Dword lengthof wordstr -1 dup(?)
+msg byte "ArrayProperties ElementSize ElementCount TotalSize",0
+msg2 byte "Wordstr: ",0
+msg3 byte "Codes: ",0
+space byte "            ",0
+sum Dword ?
+msg4 byte "Sum: ",0
+msg5 byte "Lowercase: ",0
+
+.code 
+main proc
+mov edx, offset msg
+call WriteString
+call crlf
+mov edx, offset msg2
+call WriteString
+mov edx, offset space
+call WriteString
+mov eax, type wordstr
+call WriteDec
+call writeString
+mov eax, lengthof wordstr
+call WriteDec
+call writeString
+mov eax , sizeof wordstr
+call WriteDec
+
+
+call crlf
+mov edx, offset msg3
+call WriteString
+mov edx, offset space
+call WriteString
+mov eax, type arrayCodes
+call WriteDec
+call writeString
+mov eax, lengthof arrayCodes
+call WriteDec
+call writeString
+mov eax , sizeof arrayCodes
+call WriteDec
+
+call crlf
+
+
+call crlf
+mov ecx,lengthof wordstr-1
+mov esi ,offset wordstr
+mov ebx,1
+outer:
+mov store, ecx
+mov ecx,ebx
+inner:
+mov al, [esi]
+call WriteChar
+inc esi
+loop inner
+call crlf
+mov ecx, store
+inc ebx
+mov esi, offset wordstr
+loop outer
+call crlf
+
+
+mov edx, offset msg3
+call WriteString
+mov ecx,lengthof wordstr-1
+mov esi ,offset wordstr
+mov edi, offset arrayCodes
+mov ebx,0
+SumCodes:
+movzx eax,byte ptr [esi]
+mov [edi],eax
+add ebx,eax
+call WriteDec
+mov al,' '
+call WriteChar
+inc esi
+add edi,4
+loop SumCodes
+call crlf
+mov edx, offset msg4
+call WriteString
+mov eax,ebx
+call WriteDec
+
+call crlf
+mov edx, offset msg5
+call WriteString
+mov ecx,lengthof wordstr-1
+mov esi ,offset wordstr
+lowercase:
+mov	al, [esi]
+add al, 32
+call WriteChar
+inc esi
+loop lowercase
+
+
+exit
+main endp
+end main

@@ -1,0 +1,96 @@
+include irvine32.inc
+
+.data
+ofset Sbyte -5,3,-2,7
+readings  sbyte 4 dup(?)
+adjusted sbyte lengthof readings dup(?)
+msg byte "Enter Reading ",0
+msg2 byte "Adjusted Readings: ",0
+msg3 byte "R (Decimal):  ",0
+msg4 byte "R (HexaDecimal):  ",0
+msg5 byte "Low Word of R:",0
+msg6 byte "Low byte of R:",0
+R dword ?
+
+
+.code 
+main proc
+mov edx,offset msg
+mov ecx, lengthof readings
+mov esi,offset readings
+mov ebx,1
+l1:
+call writeString
+mov eax,ebx
+call writedec
+mov al,':'
+call writechar
+call readInt
+
+mov [esi],al
+inc esi
+inc ebx
+loop l1
+
+mov esi,0
+mov ecx, lengthof readings
+l2:
+mov al,readings[esi* type readings]
+add al,ofset[esi* type ofset]
+mov adjusted[esi* type adjusted],al
+inc esi
+loop l2	
+mov edx,offset msg2
+mov ecx, lengthof adjusted
+mov esi,offset adjusted
+call writeString
+displayAdjusted:
+movsx eax, byte ptr [esi]
+call writeint
+mov al,','
+call writechar
+inc esi
+loop displayAdjusted
+
+call crlf
+
+movsx eax, byte ptr adjusted[1]
+sub al, adjusted[2]
+add al, byte ptr adjusted[3]
+sub al, byte ptr adjusted[0]
+mov R,eax
+
+mov edx,offset msg3
+call writeString
+mov eax,R
+call writedec
+call crlf
+mov edx,offset msg4
+call writeString
+call writehex
+call crlf
+mov edx,offset msg5
+call writeString
+movsx eax ,word ptr R
+mov ebx,2
+call writehexB
+call crlf
+mov edx,offset msg6
+call writeString
+movsx eax ,byte ptr R
+call writeint
+
+
+
+exit
+main endp
+end main
+
+
+
+
+
+
+
+
+
