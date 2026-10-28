@@ -1,0 +1,45 @@
+include irvine32.inc
+.data 
+mark1 dword 85
+mark2 dword 90
+mark3 dword 80
+gA byte "Grade A",0
+gB byte "Grade B",0
+gC byte "Grade C",0
+.code 
+
+main proc
+call calculateGrade
+   exit
+main ENDP
+
+
+calculateGrade proc 
+call findavg
+cmp eax,90
+jl gradeB
+mov edx,OFFSET gA
+jmp display 
+gradeB:
+cmp eax,80
+jl gradeC
+mov edx,OFFSET gB
+jmp display
+gradeC:
+mov edx,OFFSET gC
+
+display:
+call writeString
+ret
+calculateGrade ENDP
+
+findavg proc
+mov eax,mark1
+add eax,mark2
+add eax,mark3
+mov ebx,3
+mov edx,0
+div ebx
+ret
+findavg endp
+  END main

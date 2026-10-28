@@ -1,0 +1,49 @@
+include irvine32.inc
+.data 
+array dword 6,3,1,2,5
+msg byte "Sorted array: ",0
+.code 
+main proc
+mov ecx,lengthof array-1
+mov ebx,0
+mov esi,0
+outer:
+mov ebx,esi
+mov edi,esi
+inc edi
+inner:
+cmp edi,lengthof array
+jae swapelement
+mov eax,array[ebx*type array]
+mov edx,array[edi*type array]
+cmp edx,eax
+jae nextelement
+mov ebx,edi
+nextelement:
+inc edi
+jmp inner
+
+swapelement:
+mov eax,array[esi*type array]
+mov edx,array[ebx*type array]
+mov array[esi*type array],edx
+mov array[ebx*type array],eax
+
+inc esi
+loop outer
+
+mov edx,offset msg
+call writestring 
+mov ecx,lengthof array
+mov esi,0
+display:
+mov eax,array[esi*type array]
+call writedec
+mov al,' '
+call writechar
+inc esi
+loop display
+   exit
+main ENDP
+
+  END main
